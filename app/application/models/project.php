@@ -27,7 +27,8 @@ class Project extends Eloquent {
 	*/
 	public function issues()
 	{
-		return $this->has_many('Project\Issue', 'project_id');
+		//return $this->has_many('Project\Issue', 'project_id');
+		return $this->has_many('Project\Issue', 'project_id')->order_by('status', 'DESC')->order_by('weight', 'ASC');
 	}
 
 	/**
@@ -78,13 +79,25 @@ class Project extends Eloquent {
 		{
 			$user_id = \Auth::user()->id;
 		}
-
-		return \Project\Issue::where('project_id', '=', $this->id)
-			->where('assigned_to', '=', $user_id)
-			->where('status', '=', 1)
-			->count();
+		return \Tag::find(1)->issues()
+				->where('project_id', '=', $this->id)
+				->where('assigned_to', '=', $user_id)
+				->count();
 	}
 
+	public function count_open_issues()
+	{
+		return \Tag::find(1)->issues()
+				->where('project_id', '=', $this->id)
+				->count();
+	}
+
+	public function count_closed_issues()
+	{
+		return \Tag::find(2)->issues()
+				->where('project_id', '=', $this->id)
+				->count();
+ 	}
 	/**
 	* Select activity for a project
 	*
@@ -106,7 +119,7 @@ class Project extends Eloquent {
 			->order_by('created_at', 'DESC')
 			->take($activity_limit)
 			->get();
-			
+
 		if(!$project_activity)
 		{
 			return null;
@@ -170,6 +183,20 @@ class Project extends Eloquent {
 						'project' => $this,
 						'user' => $users[$row->user_id],
 						'assigned' => $users[$row->action_id],
+						'activity' => $row
+					));
+
+					break;
+
+				case 6:
+
+					$tag_diff = json_decode($row->data, true);
+					$return[] = View::make('activity/' . $activity_type[$row->type_id]->activity, array(
+						'issue' => $issues[$row->item_id],
+						'project' => $this,
+						'user' => $users[$row->user_id],
+						'tag_diff' => $tag_diff,
+						'tag_counts' => array('added' => sizeof($tag_diff['added_tags']), 'removed' => sizeof($tag_diff['removed_tags'])),
 						'activity' => $row
 					));
 
@@ -247,6 +274,7 @@ class Project extends Eloquent {
 
 		$fill = array(
 			'name' => $input['name'],
+			'default_assignee' => $input['default_assignee'],
 		);
 
 		$project = new Project;
@@ -293,7 +321,8 @@ class Project extends Eloquent {
 
 		$fill = array(
 			'name' => $input['name'],
-			'status' => $input['status']
+			'status' => $input['status'],
+			'default_assignee' => $input['default_assignee'],
 		);
 
 		$project->fill($fill);
@@ -302,6 +331,15 @@ class Project extends Eloquent {
 		return array(
 			'success' => true
 		);
+	}
+	public static function update_weblnks($input, $project) {
+		/* Update all the links attached to the project, setting the « desactivated » date as NOW */
+		\DB::table('projects_links')->where('id_project', '=', $project->id)->update(array('desactivated' => date("Y-m-d")));
+
+		/* Insert new values, setting the passed due date as NOW */
+		if (trim($input['Dev']) != '' ) { \DB::table('projects_links')->insert(array('id_project' => $project->id, 'category' => 'dev', 'link' => $input['Dev'], 'created' => date("Y-m-d"))); }
+		if (trim($input['Git']) != '' ) { \DB::table('projects_links')->insert(array('id_project' => $project->id, 'category' => 'git', 'link' => $input['Git'], 'created' => date("Y-m-d"))); }
+		if (trim($input['Prod']) != '' ) { \DB::table('projects_links')->insert(array('id_project' => $project->id, 'category' => 'prod', 'link' => $input['Prod'], 'created' => date("Y-m-d"))); }
 	}
 
 	/**

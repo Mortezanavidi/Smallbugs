@@ -19,11 +19,11 @@ class Login_Controller extends Controller {
 		
 		if(Auth::attempt($userdata))
 		{
+			Session::forget('return');
 			return Redirect::to(Input::get('return', '/'));
 		}
-
 		return Redirect::to('login')
-			->with('error',  __('tinyissue.password_incorrect'));
+			->with('error',  __('smallbugs.password_incorrect'));
 	}
 
 }

@@ -306,8 +306,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function url($name, $value = null, $attributes = array())
-	{
+	public static function url($name, $value = null, $attributes = array()) {
 		return static::input('url', $name, $value, $attributes);
 	}
 
@@ -319,8 +318,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function number($name, $value = null, $attributes = array())
-	{
+	public static function number($name, $value = null, $attributes = array())	{
 		return static::input('number', $name, $value, $attributes);
 	}
 
@@ -332,8 +330,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function date($name, $value = null, $attributes = array())
-	{
+	public static function date($name, $value = null, $attributes = array()) {
 		return static::input('date', $name, $value, $attributes);
 	}
 
@@ -344,8 +341,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function file($name, $attributes = array())
-	{
+	public static function file($name, $attributes = array()) {
 		return static::input('file', $name, null, $attributes);
 	}
 

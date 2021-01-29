@@ -1,6 +1,6 @@
 <h3>
-	<?php echo __('tinyissue.add_user'); ?>
-	<span><?php echo __('tinyissue.add_new_user'); ?></span>
+	<?php echo __('smallbugs.add_user'); ?>
+	<span><?php echo __('smallbugs.add_new_user'); ?></span>
 </h3>
 
 <div class="pad">
@@ -9,7 +9,7 @@
 		<table class="form">
 			<tr>
 				<th>
-					<?php echo __('tinyissue.first_name'); ?>
+					<?php echo __('smallbugs.first_name'); ?>
 				</th>
 				<td>
 					<input type="text" name="firstname" value="<?php echo Input::old('firstname'); ?>" />
@@ -19,7 +19,7 @@
 			</tr>
 			<tr>
 				<th>
-					<?php echo __('tinyissue.last_name'); ?>
+					<?php echo __('smallbugs.last_name'); ?>
 				</th>
 				<td>
 					<input type="text" name="lastname" value="<?php echo Input::old('lastname');?>" />
@@ -29,7 +29,7 @@
 			</tr>
 			<tr>
 				<th>
-					<?php echo __('tinyissue.email'); ?>
+					<?php echo __('smallbugs.email'); ?>
 				</th>
 				<td>
 					<input type="text" name="email" value="<?php echo Input::old('email')?>" />
@@ -39,7 +39,22 @@
 			</tr>
 			<tr>
 				<th>
-					<?php echo __('tinyissue.role'); ?>
+					<?php echo __('smallbugs.language'); ?>
+				</th>
+				<td>	
+					<select name="language">
+					<?php
+						//Language has added in nov 2016
+						$Lng = scandir("application/language/");
+						$Not = array(".", "..", "all.php");
+						foreach ($Lng as $val) { if(!in_array($val, $Not)) { echo '<option value="'.$val.'" '; if ($val == Auth::user()->language) { echo ' selected="selected" '; } echo '>'.$val.'</option>'; } }
+					?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<?php echo __('smallbugs.role'); ?>
 				</th>
 				<td>
 					<?php echo Form::select('role_id',Role::dropdown(), Input::old('role_id')); ?>
@@ -48,7 +63,7 @@
 				<tr>
 					<th></th>
 					<td>
-						<input type="submit" value="<?php echo __('tinyissue.add_user'); ?>" class="button	primary"/>
+						<input type="submit" value="<?php echo __('smallbugs.add_user'); ?>" class="button	primary"/>
 					</td>
 				</tr>
 		</table>

@@ -6,7 +6,7 @@
 		<title>Error 404 - Not Found</title>
 
 		<style>
-			@import url(http://fonts.googleapis.com/css?family=Ubuntu);
+			@import url(//fonts.googleapis.com/css?family=Ubuntu);
 
 			body {
 				background: #eee;
@@ -81,23 +81,17 @@
 	</head>
 	<body>
 		<div id="main">
-			<?php $messages = array('We need a map.', 'I think we\'re lost.', 'We took a wrong turn.'); ?>
+			<?php $messages = array(__('smallbugs.error404_title_0'),__('smallbugs.error404_title_1'),__('smallbugs.error404_title_2')); ?>
 
 			<h1><?php echo $messages[mt_rand(0, 2)]; ?></h1>
 
-			<h2>Server Error: 404 (Not Found)</h2>
+			<h2><?php echo __('smallbugs.error404_header'); ?></h2>
 
-			<h3>What does this mean?</h3>
+			<h3><?php echo __('smallbugs.error404_means'); ?></h3>
 
-			<p>
-				We couldn't find the page you requested on our servers. We're really sorry
-				about that. It's our fault, not yours. We'll work hard to get this page
-				back online as soon as possible.
-			</p>
+			<p><?php echo __('smallbugs.error404_p1'); ?></p>
 
-			<p>
-				Perhaps you would like to go to our <?php echo HTML::link('/', 'home page'); ?>?
-			</p>
+			<p><?php echo __('smallbugs.error404_p2').' '.HTML::link('/', __('smallbugs.homepage')); ?>?</p>
 		</div>
 	</body>
 </html>

@@ -16,7 +16,6 @@ define('CRLF', "\r\n");
 define('BLADE_EXT', '.blade.php');
 define('DEFAULT_BUNDLE', 'application');
 define('MB_STRING', (int) function_exists('mb_get_info'));
-
 /*
 |--------------------------------------------------------------------------
 | Start Output Buffering
@@ -28,8 +27,7 @@ define('MB_STRING', (int) function_exists('mb_get_info'));
 | only checks if headers have been sent, your redirect just silently fails.
 |
 */
-
-ob_start('mb_output_handler');
+//ob_start('mb_output_handler');
 
 /*
 |--------------------------------------------------------------------------
@@ -131,14 +129,12 @@ Autoloader::namespaces(array(
 |
 */
 
-if (magic_quotes())
-{
-	$magics = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
-
-	foreach ($magics as &$magic)
-	{
-		$magic = array_strip_slashes($magic);
-	}
+if (magic_quotes()) {
+	return true;
+//	$magics = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
+//	foreach ($magics as &$magic) {
+//		$magic = array_strip_slashes($magic);
+//	}
 }
 
 /*

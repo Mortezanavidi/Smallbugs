@@ -3,7 +3,7 @@
 
 		<?php if(!$activity): ?>
 		<p>
-			<?php echo __('tinyissue.no_activity');?>
+			<?php echo __('smallbugs.no_activity');?>
 		</p>
 		<?php else: ?>
 		<ul class="activity">

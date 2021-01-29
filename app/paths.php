@@ -43,14 +43,14 @@ $paths['sys'] = 'laravel';
 $paths['bundle'] = 'bundles';
 
 // --------------------------------------------------------------
-// The path to the vendor directory.
-// --------------------------------------------------------------
-$paths['vendor'] = 'vendor';
-
-// --------------------------------------------------------------
 // The path to the storage directory.
 // --------------------------------------------------------------
 $paths['storage'] = 'storage';
+
+// --------------------------------------------------------------
+// The path to the vendor directory.
+// --------------------------------------------------------------
+$paths['vendor'] = 'vendor';
 
 // --------------------------------------------------------------
 // The path to the public directory.
@@ -82,37 +82,33 @@ $GLOBALS['laravel_paths']['base'] = __DIR__.DS;
 // --------------------------------------------------------------
 // Define each constant if it hasn't been defined.
 // --------------------------------------------------------------
-foreach ($paths as $name => $path)
-{
-	if ( ! isset($GLOBALS['laravel_paths'][$name]))
-	{
+foreach ($paths as $name => $path) {
+	if ( ! isset($GLOBALS['laravel_paths'][$name])) {
 		$GLOBALS['laravel_paths'][$name] = realpath($path).DS;
 	}
 }
 
 /**
  * A global path helper function.
- *
+ * 
  * <code>
  *     $storage = path('storage');
  * </code>
- *
+ * 
  * @param  string  $path
  * @return string
  */
-function path($path)
-{
+function path($path) {
 	return $GLOBALS['laravel_paths'][$path];
 }
 
 /**
  * A global path setter function.
- *
+ * 
  * @param  string  $path
  * @param  string  $value
  * @return void
  */
-function set_path($path, $value)
-{
+function set_path($path, $value) {
 	$GLOBALS['laravel_paths'][$path] = $value;
 }

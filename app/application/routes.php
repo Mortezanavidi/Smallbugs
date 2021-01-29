@@ -10,7 +10,8 @@ Route::any('project/(:num)/(:any)', 'project@(:2)');
 Route::any('project/(:num)/issue/new', 'project.issue@new');
 Route::any('project/(:num)/issue/(:num)', 'project.issue@index');
 Route::any('project/(:num)/issue/(:num)/(:any)', 'project.issue@(:3)');
-
+Route::any('tag/new', 'tags@new');
+Route::any('tag/(:num)/edit', 'tags@edit');
 
 Route::controller(array(
 	'home',
@@ -18,9 +19,16 @@ Route::controller(array(
 	'projects',
 	'login',
 	'user',
+	'administration.update',
 	'administration.users',
 	'administration',
-	'ajax.project'
+	'ajax.project',
+	'ajax.todo',
+	'todo',
+	'ajax.tags',
+	'ajax.sortable',
+	'roles',
+	'tags'
 ));
 
 
@@ -49,6 +57,7 @@ View::composer('layouts.project', function($view)
 	Asset::script('jquery', 'app/assets/js/jquery.js');
 	Asset::script('jquery-ui', 'app/assets/js/jquery-ui.js');
 	Asset::script('app', 'app/assets/js/app.js', 'jquery');
+	Asset::script('app2', 'app/assets/js/sortable-issues.js', 'jquery');
 
 	Asset::script('swf', '/app/assets/js/uploadify/swfobject.js', 'app');
 	Asset::script('uploadify', '/app/assets/js/uploadify/jquery.uploadify.v2.1.4.min.js', 'app');
@@ -60,6 +69,15 @@ View::composer('layouts.project', function($view)
 	}
 
 	$view->active = 'projects';
+});
+View::composer('todo.index', function($view)
+{
+	Asset::script('app', 'app/assets/js/todo.js', 'jquery');
+});
+
+View::composer('user.issues', function($view)
+{
+	Asset::script('app', 'app/assets/js/todo-issues.js', 'jquery');
 });
 
 View::composer('layouts.login', function($view)
@@ -100,7 +118,11 @@ Route::filter('csrf', function()
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::to('login');
+	if (Auth::guest()) 
+	{
+		Session::put('return', URI::current());
+		return Redirect::to('login');
+	}
 });
 
 Route::filter('ajax', function()
@@ -110,6 +132,10 @@ Route::filter('ajax', function()
 
 Route::filter('project', function()
 {
+	// find project id from issue object
+	if (Request::route()->parameters[0] == 0) {
+		return;
+	}
 	Project::load_project(Request::route()->parameters[0]);
 
 	if(!Project::current())
@@ -126,6 +152,17 @@ Route::filter('issue', function()
 	{
 		return Response::error('404');
 	}
+
+	// load project
+	if (Request::route()->parameters[0] == 0) {
+		Request::route()->parameters = array(
+			Project\Issue::current()->project_id,
+			Project\Issue::current()->id
+		);
+
+		Project::load_project(Request::route()->parameters[0]);
+	}
+
 });
 
 Route::filter('permission', function($permission)

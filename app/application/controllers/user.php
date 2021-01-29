@@ -24,11 +24,11 @@ class User_Controller extends Base_Controller {
 			return Redirect::to('user/settings')
 				->with_input()
 				->with_errors($settings['errors'])
-				->with('notice-error', __('tinyissue.we_have_some_errors'));
+				->with('notice-error', __('smallbugs.we_have_some_errors'));
 		}
 
 		return Redirect::to('user/settings')
-			->with('notice', __('tinyissue.settings_updated'));
+			->with('notice', __('smallbugs.settings_updated'));
 	}
 
 	/**

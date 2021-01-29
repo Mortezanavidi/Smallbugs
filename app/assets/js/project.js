@@ -1,12 +1,21 @@
 $(function() {
 
+	/* Make external links target to _blank */
+
+	var links = document.links;
+	$(document.links).filter(function() {
+		var Ceci = this.href;
+    	if (Ceci.substr(0, 11) == 'javascript:') { return false; }
+    	return this.hostname != window.location.hostname;
+	}).attr('target', '_blank');
+
 	/* Uploadify */
 	var uploaded_attachments = $('#uploaded-attachments');
 	var upload_token = $('input[name=token]').val();
 	var session = $('input[name=session]').val();
 	var project = $('input[name=project_id]').val();
 
-	$('#upload').uploadify({
+	$("#upload").uploadify({
 		'uploader' : baseurl + '/app/assets/js/uploadify/uploadify.swf',
 		'script' : siteurl + 'ajax/project/issue_upload_attachment',
 		'scriptData' : {
@@ -14,6 +23,11 @@ $(function() {
 			project_id : project,
 			upload_token : upload_token
 		},
+		'hideButton': true,
+		'wmode'      : 'transparent',
+		'buttonText' : $('#uploadbuttontext').val(),
+		'width' : 200,
+		'height':30,
 		'cancelImg' : baseurl + '/app/assets/images/layout/icon-delete.png',
 		'auto' : true,
 		'multi' : true,
@@ -49,6 +63,7 @@ $(function() {
 		var id = $(this).closest('.comment').attr('id');
 		$('#' + id + ' .issue').hide();
 		$('#' + id + ' .comment-edit').show();
+		AffichonsEditor(id);
 		return false;
 	});
 
@@ -56,7 +71,7 @@ $(function() {
 
 		e.preventDefault();
 
-		if(confirm('Are sure you want to delete this comment?')){
+		if(confirm('Are you sure you want to delete this comment?')){
 
 			var saving = $('.global-saving span').html();
 			$('.global-saving span').html('Deleting');

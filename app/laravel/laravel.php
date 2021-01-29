@@ -35,18 +35,14 @@ set_exception_handler(function($e)
 });
 
 
-set_error_handler(function($code, $error, $file, $line)
-{
+set_error_handler(function($code, $error, $file, $line) {
 	require_once path('sys').'error'.EXT;
-
 	Error::native($code, $error, $file, $line);
 });
 
 
-register_shutdown_function(function()
-{
+register_shutdown_function(function() {
 	require_once path('sys').'error'.EXT;
-
 	Error::shutdown();
 });
 
@@ -87,7 +83,6 @@ Bundle::start(DEFAULT_BUNDLE);
 | to explicitly start them within the application.
 |
 */
-
 foreach (Bundle::$bundles as $bundle => $config)
 {
 	if ($config['auto']) Bundle::start($bundle);
@@ -132,11 +127,10 @@ $languages[] = Config::get('application.language');
 |--------------------------------------------------------------------------
 |
 | If the URI starts with one of the supported languages, we will set
-| the default lagnauge to match that URI segment and shorten the
+| the default language to match that URI segment and shorten the
 | URI we'll pass to the router to not include the lang segment.
 |
 */
-
 foreach ($languages as $language)
 {
 	if (preg_match("#^{$language}(?:$|/)#i", $uri))
@@ -161,7 +155,6 @@ URI::$uri = $uri;
 | of the Response object that we can send back to the browser
 |
 */
-
 Request::$route = Router::route(Request::method(), $uri);
 
 $response = Request::$route->call();

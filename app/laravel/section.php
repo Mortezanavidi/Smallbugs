@@ -67,9 +67,9 @@ class Section {
 	 *
 	 * @return string
 	 */
-	public static function yield_section()
+	public static function yieldContent_section()
 	{
-		return static::yield(static::stop());
+		return static::yieldContent(static::stop());
 	}
 
 	/**
@@ -80,7 +80,7 @@ class Section {
 	public static function stop()
 	{
 		static::extend($last = array_pop(static::$last), ob_get_clean());
-
+//		static::extend($last = array_pop(static::$last), "");
 		return $last;
 	}
 
@@ -128,7 +128,7 @@ class Section {
 	 * @param  string  $section
 	 * @return string
 	 */
-	public static function yield($section)
+	public static function yieldContent($section)
 	{
 		return (isset(static::$sections[$section])) ? static::$sections[$section] : '';
 	}

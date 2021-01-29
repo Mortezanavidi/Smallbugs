@@ -14,8 +14,7 @@ class URL {
 	 *
 	 * @return string
 	 */
-	public static function full()
-	{
+	public static function full() {
 		return static::to(URI::full());
 	}
 
@@ -24,8 +23,7 @@ class URL {
 	 *
 	 * @return string
 	 */
-	public static function current()
-	{
+	public static function current() {
 		return static::to(URI::current(), null, false, false);
 	}
 
@@ -35,15 +33,13 @@ class URL {
 	 * @param  bool    $https
 	 * @return string
 	 */
-	public static function home($https = null)
-	{
+	public static function home($https = null) {
 		$route = Router::find('home');
 
 		// If a route named "home" exists, we'll route to that instead of using
 		// the single slash root URI. This allows the HTTPS attribute to be
 		// respected instead of being hard-coded in the redirect.
-		if ( ! is_null($route))
-		{
+		if ( ! is_null($route)) {
 			return static::to_route('home');
 		}
 
@@ -55,8 +51,7 @@ class URL {
 	 *
 	 * @return string
 	 */
-	public static function base()
-	{
+	public static function base() {
 		if (isset(static::$base)) return static::$base;
 
 		$base = 'http://localhost';
@@ -64,12 +59,9 @@ class URL {
 		// If the application's URL configuration is set, we will just use that
 		// instead of trying to guess the URL from the $_SERVER array's host
 		// and script variables as this is a more reliable method.
-		if (($url = Config::get('application.url')) !== '')
-		{
+		if (($url = Config::get('application.url')) !== '') {
 			$base = $url;
-		}
-		else
-		{
+		} else {
 			$base = Request::foundation()->getRootUrl();
 		}
 
@@ -93,13 +85,11 @@ class URL {
 	 * @param  bool    $locale
 	 * @return string
 	 */
-	public static function to($url = '', $https = null, $asset = false, $locale = true)
-	{
+	public static function to($url = '', $https = null, $asset = false, $locale = true) {
 		// If the given URL is already valid or begins with a hash, we'll just return
 		// the URL unchanged since it is already well formed. Otherwise we will add
 		// the base URL of the application and return the full URL.
-		if (static::valid($url) or starts_with($url, '#'))
-		{
+		if (static::valid($url) or starts_with($url, '#')) {
 			return $url;
 		}
 
@@ -109,30 +99,30 @@ class URL {
 
 		$root = static::base();
 
-		if ( ! $asset)
-		{
+		if ( ! $asset) {
 			$root .= '/'.Config::get('application.index');
 		}
-
 		$languages = Config::get('application.languages');
-
-		if ( ! $asset and $locale and count($languages) > 0)
-		{
-			if (in_array($default = Config::get('application.language'), $languages))
-			{
-				$root = rtrim($root, '/').'/'.$default;
+		if (is_null($languages)) { 
+			$languages = scandir(Config::get('application.index').'application/language');
+			array_shift($languages);
+			array_shift($languages);
+			array_shift($languages);
+		}
+		
+		if ( ! $asset and $locale and count($languages) > 0) {
+			if (in_array($default = Config::get('application.language'), $languages)) {
+				//$root = rtrim($root, '/').'/'.$default;
+				$root = rtrim($root, '/');
 			}
 		}
 
 		// Since SSL is not often used while developing the application, we allow the
 		// developer to disable SSL on all framework generated links to make it more
 		// convenient to work with the site while developing locally.
-		if ($https and Config::get('application.ssl'))
-		{
+		if ($https and Config::get('application.ssl')) {
 			$root = preg_replace('~http://~', 'https://', $root, 1);
-		}
-		else
-		{
+		} else {
 			$root = preg_replace('~https://~', 'http://', $root, 1);
 		}
 
@@ -145,8 +135,7 @@ class URL {
 	 * @param  string  $url
 	 * @return string
 	 */
-	public static function to_secure($url = '')
-	{
+	public static function to_secure($url = '') {
 		return static::to($url, true);
 	}
 
